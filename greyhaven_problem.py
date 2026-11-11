@@ -1,10 +1,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.patches import Circle
+from mealpy import Problem, FloatVar, IntegerVar, BinaryVar, CategoricalVar
 
-class GreyhavenProblem:
+class GreyhavenProblem(Problem):
     
-    def __init__(self, situation="Initial response"):
+    def __init__(self, situation="Initial response", assignment="B"):
 
         # Equipment depot location
         self.equipment_depot = (5.0, 0.0)
@@ -74,6 +75,34 @@ class GreyhavenProblem:
         }
 
         self.set_situation(situation)
+
+        self.assignment = assignment
+
+        # 4 stations × 6 variables = 24 decision variables
+        bounds = []
+
+        for i in range(4):
+            bounds.extend([
+                FloatVar(lb=0, ub=10, name=f"x{i}"),
+                FloatVar(lb=0, ub=10, name=f"y{i}"),
+                FloatVar(lb=0.2, ub=2, name=f"p{i}")
+            ])
+
+            if assignment == "A":
+                bounds.extend([
+                    IntegerVar(lb=4, ub=4, name=f"h{i}"),
+                    CategoricalVar(valid_sets=(1,), name=f"c{i}"),
+                    BinaryVar(n_vars=1, name=f"z{i}")
+                ])
+
+            else:
+                bounds.extend([
+                    IntegerVar(lb=2, ub=6, name=f"h{i}"),
+                    CategoricalVar(valid_sets=(1, 2, 3), name=f"c{i}"),
+                    BinaryVar(n_vars=1, name=f"z{i}")
+                ])
+
+        super().__init__(bounds=bounds, minmax="min")
 
     def set_situation(self, situation):
         if situation not in self.situations:
@@ -219,6 +248,89 @@ class GreyhavenProblem:
         Q = -np.sum(weights * service_quality) / np.sum(weights)
 
         return Q
+
+    def obj_func(self, x):
+        decoded = self.decode_solution(x)
+
+        stations = np.array([
+            [
+                decoded[f"x{i}"],
+                decoded[f"y{i}"],
+                decoded[f"p{i}"],
+                decoded[f"h{i}"],
+                decoded[f"c{i}"],
+                decoded[f"z{i}"]
+            ]
+            for i in range(4)
+        ], dtype=float)
+
+        return self.calculate_objective_Q(stations)
+
+    def calculate_delivery_distances(self, stations):
+        """
+        Calculate the distance of each station from the equipment depot.
+        Returns four distances (L_i).
+        """
+
+        stations = np.asarray(stations).reshape(4, 6)
+
+        depot_x, depot_y = self.equipment_depot
+
+        distances = np.sqrt(
+            (stations[:, 0] - depot_x) ** 2 +
+            (stations[:, 1] - depot_y) ** 2
+        )
+
+        return distances
+
+    def calculate_deployment_cost(self, stations):
+        """
+        Calculate total deployment cost C(X), in dollars.
+        """
+
+        stations = np.asarray(stations).reshape(4, 6)
+
+        height = stations[:, 3]
+        status = stations[:, 5]
+
+        distances = self.calculate_delivery_distances(stations)
+
+        station_costs = status * (
+            400 +
+            35 * (height - 2) ** 2 +
+            20 * distances
+        )
+
+        return np.sum(station_costs)
+
+    def calculate_electrical_energy(self, stations):
+        """
+        Calculate electrical energy E(X) over 12 hours, in Wh.
+        """
+
+        stations = np.asarray(stations).reshape(4, 6)
+
+        power = stations[:, 2]
+        height = stations[:, 3]
+        status = stations[:, 5]
+
+        station_energy = 12 * status * (
+            18 + 14 * power + 0.5 * (height - 2)
+        )
+
+        return np.sum(station_energy)
+
+    def calculate_objectives(self, stations):
+        """
+        Return all three objectives for Assignment C:
+        Q(X), C(X), E(X).
+        """
+        
+        Q = self.calculate_objective_Q(stations)
+        C = self.calculate_deployment_cost(stations)
+        E = self.calculate_electrical_energy(stations)
+
+        return np.array([Q, C, E])
 
     def plot_deployment(self, stations):
 
