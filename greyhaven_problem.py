@@ -92,9 +92,8 @@ class GreyhavenProblem(Problem):
                 bounds.extend([
                     IntegerVar(lb=4, ub=4, name=f"h{i}"),
                     CategoricalVar(valid_sets=(1,), name=f"c{i}"),
-                    BinaryVar(n_vars=1, name=f"z{i}")
+                    IntegerVar(lb=1, ub=1, name=f"z{i}")  # Fixed active
                 ])
-
             else:
                 bounds.extend([
                     IntegerVar(lb=2, ub=6, name=f"h{i}"),
@@ -397,8 +396,8 @@ class GreyhavenProblem(Problem):
         for i, station in enumerate(stations):
             x, y, power, height, channel, status = station
 
-            if status == 0:
-                continue
+            # if status == 0:
+            #     continue
 
             color = channel_colors[int(channel)]
 
