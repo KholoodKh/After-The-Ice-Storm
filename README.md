@@ -151,7 +151,7 @@ The project generates visualizations and summaries to compare optimization algor
 Clone the repository:
 
 ```bash
-git clone [repository-url](https://github.com/KholoodKh/After-The-Ice-Storm.git)
+git clone https://github.com/KholoodKh/After-The-Ice-Storm.git
 cd After-The-Ice-Storm
 ```
 
