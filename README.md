@@ -59,9 +59,8 @@ Considers three objectives simultaneously:
 
 The problem minimizes:
 
-\[
-\min [Q,C,E]
-\]
+min [Q,C,E]
+
 
 Since these objectives may conflict, the algorithms generate a set of non-dominated solutions representing different trade-offs.
 
@@ -79,8 +78,6 @@ The tested algorithms include:
 - Particle Swarm Optimization (PSO)
 - Grey Wolf Optimizer (GWO)
 - Improved Grey Wolf Optimizer (IGWO)
-- Whale Optimization Algorithm (WOA)
-- Harris Hawks Optimization (HHO)
 
 ### Assignment C
 
@@ -154,8 +151,8 @@ The project generates visualizations and summaries to compare optimization algor
 Clone the repository:
 
 ```bash
-git clone <repository-url>
-cd <repository-folder>
+git clone [repository-url](https://github.com/KholoodKh/After-The-Ice-Storm.git)
+cd After-The-Ice-Storm
 ```
 
 Create and activate a virtual environment (optional):
@@ -176,71 +173,10 @@ Install dependencies:
 pip install -r requirements.txt
 ```
 
-## 8. Running the Experiments
-
-Run the relevant Python scripts or notebooks for each assignment.
-
-Before running experiments, configure:
-
-- The operating situation.
-- The optimization assignment.
-- The selected optimization algorithms.
-- The population size and evaluation budget.
-- The number of independent runs.
-
-For example, the experimental configuration uses:
-
-```python
-n_runs = 31
-pop_size = 50
-max_fe = 10000
-```
-
-## 9. Results
+## 8. Results
 
 Experimental results are stored and analyzed for each algorithm and operating situation.
 
 The results include convergence data, runtime measurements, objective values, and optimized station configurations.
 
 Assignment C additionally stores the final Pareto solutions and their corresponding decision vectors.
-
-## 10. Reproducibility
-
-To support reproducibility:
-
-- Each independent run uses a separate random seed.
-- All algorithms use the specified evaluation budget.
-- Experimental settings are kept consistent across comparisons.
-- Dependencies and their versions are listed in `requirements.txt`.
-
-## 11. Project Structure
-
-The repository contains the problem implementation, optimization experiments, visualization utilities, and experimental results.
-
-A suggested organization is:
-
-```text
-Greyhaven-Optimization/
-│
-├── greyhaven_problem.py
-├── greyhaven_moo_problem.py
-├── requirements.txt
-├── README.md
-│
-├── assignment_A/
-├── assignment_B/
-├── assignment_C/
-│
-├── results/
-│   ├── assignment_A/
-│   ├── assignment_B/
-│   └── assignment_C/
-│
-└── figures/
-```
-
-*The directory names above are illustrative; adjust them to match the actual repository.*
-
-## 12. License
-
-This project was developed for academic research and experimental evaluation of optimization algorithms for emergency radio deployment.
