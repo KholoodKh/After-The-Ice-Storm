@@ -13,7 +13,7 @@ Each station is described by six decision variables:
 | `x` | Easting coordinate |
 | `y` | Northing coordinate |
 | `p` | Transmission power |
-| `h` | Antenna height |
+| `h` | Mast height |
 | `c` | Communication channel |
 | `z` | Station activation status |
 
@@ -27,29 +27,29 @@ The optimization considers three operating situations:
 
 ## 2. Optimization Assignments
 
-### Assignment A – Location Optimization
+### Assignment A – The first shift
 
 Optimizes station locations and transmission power while keeping the other station settings fixed:
 
-- Antenna height: `h = 4`
+- Mast height: `h = 4`
 - Communication channel: `c = 1`
 - Activation status: `z = 1`
 
 The purpose is to investigate how station placement and transmission power affect emergency communication performance.
 
-### Assignment B – Full Configuration Optimization
+### Assignment B – Equipment choices
 
 Optimizes all six decision variables for each station:
 
 - Location (`x`, `y`)
 - Transmission power (`p`)
-- Antenna height (`h`)
+- Mast height (`h`)
 - Communication channel (`c`)
 - Activation status (`z`)
 
 This assignment provides a more flexible deployment optimization problem.
 
-### Assignment C – Multi-Objective Optimization
+### Assignment C – Keeping the network running
 
 Considers three objectives simultaneously:
 
@@ -135,7 +135,6 @@ The project generates visualizations and summaries to compare optimization algor
 - Python
 - MEALPY
 - pymoo
-- SAES
 - NumPy
 - Pandas
 - SciPy
